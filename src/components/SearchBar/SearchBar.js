@@ -9,7 +9,8 @@ class SearchBar extends React.Component {
             term: '',
             location: '',
             sortBy: 'best_match',
-            countries: []
+            countries: [
+            ]
         }
         this.sortByOptions = {
             'Best Match' : 'best_match',
@@ -21,6 +22,8 @@ class SearchBar extends React.Component {
         this.handleSearch = this.handleSearch.bind(this);
         this.renderCountries = this.renderCountries.bind(this);
     }
+
+
 
     handleSortByChange(sortByOption){
         this.setState({
@@ -64,18 +67,24 @@ class SearchBar extends React.Component {
         });
     }
 
-    renderCountries(){
-         getCountries().then(countries => {
-             countries.map(country => {
-                console.log(country)
-                return (<option key={country.code} value={country.code}>{country.country}</option>)
+
+     renderCountries(){
+      return this.state.countries.map(country => {
+            return (<option key={country.code} value={country.code}>{country.country}</option>)
+        })
+    }
+
+    componentDidMount(){
+        getCountries().then(countries => {
+            this.setState({
+                countries: countries
             })
-        });
+        })
     }
 
     render() {
         return (
-            <div className="SearchBar">
+            <div className="SearchBar" onLoad={this.componentDidMount}>
                 <div className="SearchBar-sort-options">
                     <ul>
                         {this.renderSortByOptions()}
@@ -83,9 +92,7 @@ class SearchBar extends React.Component {
                 </div>
                 <div className="SearchBar-fields">
                     <input placeholder="Search Spot" onChange={this.handleTermChange} />
-                    <input placeholder="Where?" onChange={this.handleLocationChange} />
-                    <select>
-                        <option>123</option>
+                    <select onChange={this.handleLocationChange} >
                         {this.renderCountries()}
                     </select>
                 </div>
